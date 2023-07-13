@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-import re, argparse
+
+import re, argparse#, argcomplete
 from time import sleep,time
 
 # arguments
@@ -21,16 +22,25 @@ startTime = time()
 
 
 # functions
-def validateRegex():
-    pass # validate regex and make sure there is no problem with them
+def validateRegex(pattern):
+    # validate regex and make sure there is no problem with them
     # if the regex is invalid the script will run it anyway but return everything from the original wl
     # so if it is invalid stop the script and say so
+    try:
+        re.compile(pattern)
+    except re.error:
+        print("The regex pattern you entered was not valid. Please try again with a valid regex pattern")
+        exit()
 
 def cleanUp(wordlist: str):
     wordlist = wordlist.strip()
 
     wordlist += "\n"
     return wordlist
+
+
+validateRegex(args.regex)
+
 
 # main script
 try:
@@ -52,7 +62,7 @@ finally:
 
     for x in range(0, 5):
         print("Exiting" + "." * x, end="\r")
-        sleep(0.05)
+        sleep(0.1)
 
     cleanedList = cleanUp(outputWL)    
     with open(args.output, "w") as outputFile:
