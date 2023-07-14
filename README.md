@@ -8,10 +8,11 @@ sudo chmod +x listMin.py \
 cp listMin.py /usr/bin/listMin
 ``` 
 ## Usage
+`listMin -w WORDLIST -r REGEX_PATTERN -o OUTPUT_FILE`
 ```
 listMin -w /usr/share/seclists/Fuzzing/6-digits-000000-999999.txt -r 0 -o new.txt // Gets rid of any 6 digit string containing 0
 
-listMin -w -r "
+listMin -w /usr/share/seclists/Fuzzing/6-digits-000000-999999.txt -r "(.)\1{3,}" -o new.txt // Gets rid of any string that has the same character repeated 4 times or more.
 ```
 
 regex with one pattern
