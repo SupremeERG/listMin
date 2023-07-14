@@ -58,9 +58,6 @@ try:
         fullLength = getLineCount(args.wordlist)
         for word in wordlist:
             word = word.decode("latin-1")
-            print(
-                f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
-            )
             # algorithm
             if args.mode == "exclude":
                 if re.search(rf"{args.regex}", word) == None:
@@ -70,6 +67,9 @@ try:
                 if re.search(rf"{args.regex}", word) != None:
                     outputWL += word
                 i += 1
+            print(
+                f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
+            )
 except KeyboardInterrupt as err:
     pass
 finally:
