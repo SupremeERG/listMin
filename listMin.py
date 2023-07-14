@@ -46,6 +46,7 @@ def getLineCount(file):
     return len(open(file, "rb").readlines())
 
 
+
 validateRegex(args.regex)
 
 
@@ -83,5 +84,5 @@ finally:
     with open(args.output, "w") as outputFile:
         outputFile.write(cleanedList)
         print(
-            f"{( cleanedList.count( chr( 10 ) ) ) -1 } lines written to {args.output} in {round(endTime,2)} seconds"
+            f"{( cleanedList.count( chr( 10 ) ) ) } lines written to {args.output} in {round(endTime,2)} seconds"
         )
