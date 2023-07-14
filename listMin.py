@@ -5,6 +5,7 @@ from time import sleep, time
 
 # arguments
 parser = argparse.ArgumentParser()
+parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude\") DEFAULT: exclude", default="exclude", choices=["include","exclude"])
 parser.add_argument("-w", "--wordlist", help="Input wordlist", required=True)
 parser.add_argument(
     "-r", "--regex", help="Regex to filter through wordlist", required=True
@@ -58,10 +59,16 @@ try:
             word = word.decode("latin-1")
             print(
                 f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
-            )  # chang this to show a percentage
-            if re.search(rf"{args.regex}", word) == None:
-                outputWL += word
-            i += 1
+            )
+            # algorithm
+            if args.mode == "exclude":
+                if re.search(rf"{args.regex}", word) == None:
+                    outputWL += word
+                i += 1
+            elif args.mode == "include":
+                if re.search(rf"{args.regex}", word) != None:
+                    outputWL += word
+                i += 1
 except KeyboardInterrupt as err:
     pass
 finally:
