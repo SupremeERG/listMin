@@ -17,7 +17,7 @@ listMin -w /usr/share/seclists/Fuzzing/6-digits-000000-999999.txt -r "(.)\1{3,}"
 
 ## Wiki
 
-(`Help`)[https://github.com/SupremeERG/listMin/wiki/Help]
+[Help](https://github.com/SupremeERG/listMin/wiki/Help)
 
-(`List of Common Regexes`)[https://github.com/SupremeERG/listMin/wiki/Regexpressions#common-regex-patterns]
+[List of Common Regexes](https://github.com/SupremeERG/listMin/wiki/Regexpressions#common-regex-patterns)
 <!-- add link to regex wiki page -->
