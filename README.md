@@ -8,6 +8,7 @@ sudo chmod +x listMin.py \
 sudo ln -s listMin.py /usr/bin/listMin
 ``` 
 ## Usage
+`listMin --help`
 `listMin -w WORDLIST -r REGEX_PATTERN -o OUTPUT_FILE`
 ```
 listMin -w /usr/share/seclists/Fuzzing/6-digits-000000-999999.txt -r 0 -o new.txt // Gets rid of any 6 digit string containing 0
