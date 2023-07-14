@@ -1,18 +1,17 @@
 #!/usr/bin/python3
 
-import re, argparse#, argcomplete
-from time import sleep,time
+import re, argparse  # , argcomplete
+from time import sleep, time
 
 # arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-w", "--wordlist", help="Input wordlist", required=True)
 parser.add_argument(
-    "-r",
-    "--regex",
-    help="Regex to filter through wordlist",
-    required=True
+    "-r", "--regex", help="Regex to filter through wordlist", required=True
 )
-parser.add_argument("-o", "--output", help="Output file for transformed wordlist", required=True)
+parser.add_argument(
+    "-o", "--output", help="Output file for transformed wordlist", required=True
+)
 args = parser.parse_args()
 
 # variables
@@ -29,8 +28,11 @@ def validateRegex(pattern):
     try:
         re.compile(pattern)
     except re.error:
-        print("The regex pattern you entered was not valid. Please try again with a valid regex pattern")
+        print(
+            "The regex pattern you entered was not valid. Please try again with a valid regex pattern"
+        )
         exit()
+
 
 def cleanUp(wordlist: str):
     wordlist = wordlist.strip()
@@ -39,21 +41,27 @@ def cleanUp(wordlist: str):
     return wordlist
 
 
+def getLineCount(file):
+    return len(open(file, "rb").readlines())
+
+
 validateRegex(args.regex)
 
 
 # main script
 try:
     print("\n\n")
-    with open(args.wordlist, "r") as wordlist:
-        wordlist = wordlist.readlines()
-        i=0
-        fullLength = len(wordlist)
+    with open(args.wordlist, "rb") as wordlist:
+        i = 0
+        fullLength = getLineCount(args.wordlist)
         for word in wordlist:
-            print(f"{round(((i/fullLength) * 100), 2)}% Done", end="\r") # chang this to show a percentage
-            if re.search(fr"{args.regex}", word) == None:
+            word = word.decode("latin-1")
+            print(
+                f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
+            )  # chang this to show a percentage
+            if re.search(rf"{args.regex}", word) == None:
                 outputWL += word
-            i+=1
+            i += 1
 except KeyboardInterrupt as err:
     pass
 finally:
@@ -64,7 +72,9 @@ finally:
         print("Exiting" + "." * x, end="\r")
         sleep(0.1)
 
-    cleanedList = cleanUp(outputWL)    
+    cleanedList = cleanUp(outputWL)
     with open(args.output, "w") as outputFile:
         outputFile.write(cleanedList)
-        print(f"{(cleanedList.count(chr(10)))} lines writtent to {args.output} in {round(endTime,2)} seconds")
+        print(
+            f"{( cleanedList.count( chr( 10 ) ) ) -1 } lines written to {args.output} in {round(endTime,2)} seconds"
+        )
