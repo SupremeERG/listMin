@@ -76,7 +76,7 @@ finally:
     endTime = time() - startTime
     print("\n")
 
-    for x in range(0, 5):
+    for x in range(5):
         print("Exiting" + "." * x, end="\r")
         sleep(0.1)
 
