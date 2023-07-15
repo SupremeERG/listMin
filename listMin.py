@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import re, argparse, threading, concurrent.futures  # , argcomplete
+import re, argparse
 from time import sleep, time
 
 # arguments
@@ -22,9 +22,6 @@ startTime = time()
 
 # functions
 def validateRegex(pattern):
-    # validate regex and make sure there is no problem with them
-    # if the regex is invalid the script will run it anyway but return everything from the original wl
-    # so if it is invalid stop the script and say so
     try:
         re.compile(pattern)
     except re.error:
@@ -68,14 +65,14 @@ try:
             print(
                 f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
             )
-except KeyboardInterrupt as err:
-    pass
+except KeyboardInterrupt:
+    print(f"\nStopping at the {i}th line")
 finally:
     print("\n")
     endTime = time() - startTime
 
     
-    [print(f"Cleaning Up{'.' * x}", end="\r") or sleep(0.2) for x in range(4)]
+    [print(f"\rCleaning Up{'.' * x}", color="green", end="\r") or sleep(0.2) for x in range(4)]
     
     cleanedList = cleanUp(outputWL)    
     with open(args.output, "w") as outputFile:
