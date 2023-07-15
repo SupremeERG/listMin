@@ -72,7 +72,7 @@ finally:
     endTime = time() - startTime
 
     
-    [print(f"\rCleaning Up{'.' * x}", color="green", end="\r") or sleep(0.2) for x in range(4)]
+    [print(f"\rCleaning Up{'.' * x}", end="\r") or sleep(0.2) for x in range(4)]
     
     cleanedList = cleanUp(outputWL)    
     with open(args.output, "w") as outputFile:
