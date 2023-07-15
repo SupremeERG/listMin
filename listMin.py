@@ -1,11 +1,10 @@
 #!/usr/bin/python3
-
-import re, argparse  # , argcomplete
+import re, argparse, threading, concurrent.futures  # , argcomplete
 from time import sleep, time
 
 # arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude\") DEFAULT: exclude", default="exclude", choices=["include","exclude"])
+parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude\")\nDEFAULT: exclude", default="exclude", choices=["include","exclude"])
 parser.add_argument("-w", "--wordlist", help="Input wordlist", required=True)
 parser.add_argument(
     "-r", "--regex", help="Regex to filter through wordlist", required=True
@@ -34,18 +33,17 @@ def validateRegex(pattern):
         )
         exit()
 
-
-def cleanUp(wordlist: str):
+def cleanUp(wordlist: str):    
     wordlist = wordlist.strip()
 
-    wordlist += "\n"
-    return wordlist
+    # remove duplicates
+    wordlist = wordlist.split("\n")
+    wordlist = "\n".join(list(set(wordlist)))
 
+    return wordlist + "\n"
 
 def getLineCount(file):
     return len(open(file, "rb").readlines())
-
-
 
 validateRegex(args.regex)
 
@@ -73,16 +71,19 @@ try:
 except KeyboardInterrupt as err:
     pass
 finally:
-    endTime = time() - startTime
     print("\n")
+    endTime = time() - startTime
 
-    for x in range(5):
-        print("Exiting" + "." * x, end="\r")
-        sleep(0.1)
+    for x in range(4):
+        print("Cleaning Up" + "." * x, end="\r")
+        sleep(0.2)
+        if x == 3:
+            print("Cleaning Up...")
+            sleep(1.6)
+            print("dont worry, I did not crash on you :)  I'm still cleaning up")
 
     cleanedList = cleanUp(outputWL)
     with open(args.output, "w") as outputFile:
         outputFile.write(cleanedList)
-        print(
-            f"{( cleanedList.count( chr( 10 ) ) ) } lines written to {args.output} in {round(endTime,2)} seconds"
-        )
+    print(f"\n{cleanedList.count(chr(10))} lines written to {args.output} in {round(endTime, 2)} seconds")
+
