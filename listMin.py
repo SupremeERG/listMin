@@ -77,12 +77,11 @@ finally:
     for x in range(4):
         print("Cleaning Up" + "." * x, end="\r")
         sleep(0.2)
-        if x == 3:
-            print("Cleaning Up...")
-            sleep(1.6)
-            print("dont worry, I did not crash on you :)  I'm still cleaning up")
-
-    cleanedList = cleanUp(outputWL)
+    try:
+        cleanedList = cleanUp(outputWL)
+    except KeyboardInterrupt:
+        pass
+    
     with open(args.output, "w") as outputFile:
         outputFile.write(cleanedList)
     print(f"\n{cleanedList.count(chr(10))} lines written to {args.output} in {round(endTime, 2)} seconds")
