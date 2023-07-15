@@ -1,5 +1,7 @@
 # listMin
-listMin is a simple python script that can minimize/simplify wordlists using regular expressions. It is common for hackers to have a wordlist with too many words in it: so I created this script to help solve that problem
+listMin is a simple python script that can minimize/simplify wordlists using regular expressions. It is common for hackers to have a wordlist with too many words or duplicate strings in it: so I created this script to help solve that problem
+
+
 ## Installation
 ```
 git clone https://github.com/SupremeERG/listMin.git && \
