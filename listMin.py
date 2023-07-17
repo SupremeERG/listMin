@@ -32,7 +32,7 @@ def validateRegex(pattern):
             with open(args.patternfile, "r") as regexPatterns:
                 for regexPattern in regexPatterns:
                     pattern += regexPattern.strip() + "|"
-                pattern = pattern[:-1]
+            pattern = pattern[:-1]
         re.compile(pattern)
         return pattern
     except re.error:
@@ -48,7 +48,7 @@ def cleanUp(wordlist: str):
     wordlist = wordlist.split("\n")
     wordlist = "\n".join(list(set(wordlist)))
 
-    return wordlist + "\n"
+    return wordlist[1:] + "\n"
 
 def getLineCount(file):
     return len(open(file, "rb").readlines())
@@ -86,7 +86,7 @@ finally:
     [print(f"\rCleaning Up{'.' * x}", end="\r") or sleep(0.2) for x in range(4)]
     
     cleanedList = cleanUp(outputWL)    
-    with open(args.output, "w") as outputFile:
+    with open(args.output, "w", encoding="latin-1") as outputFile:
         outputFile.write(cleanedList)
     print(f"\n{cleanedList.count(chr(10))} lines written to {args.output} in {round(endTime, 2)} seconds")
 
