@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 import re, argparse
 from time import sleep, time
+from collections import OrderedDict
 
 # arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude\")\nDEFAULT: exclude", default="exclude", choices=["include","exclude"])
+parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude, cut\")\nDEFAULT: exclude", default="exclude", choices=["include","exclude", "cut"])
 parser.add_argument("-p", "--patternfile", help="Read list of regexes in a file seperated by new lines (u guessed it: a wordlist)")
+parser.add_argument("-s", "--saveorder", help="Save the order of the inputted wordlist (This will make the cleanup just a little longer)", action="store_true")
 parser.add_argument("-w", "--wordlist", help="Input wordlist", required=True)
 parser.add_argument(
     "-r", "--regex", help="Regex to filter through wordlist"
@@ -48,7 +50,11 @@ def cleanUp(wordlist: str):
 
     # remove duplicates
     wordlist = wordlist.split("\n")
-    wordlist = "\n".join(list(set(wordlist)))
+    if args.saveorder is True:
+        wordlist = "\n".join(OrderedDict.fromkeys(wordlist))
+    else:
+        wordlist = "\n".join(list(set(wordlist)))
+
 
     return wordlist + "\n"
 
@@ -70,11 +76,16 @@ try:
             if args.mode == "exclude":
                 if re.search(rf"{regexFilter}", word) == None:
                     outputWL += word
-                i += 1
             elif args.mode == "include":
                 if re.search(rf"{regexFilter}", word) != None:
                     outputWL += word
-                i += 1
+            elif args.mode == "cut":
+                word = re.sub(rf"{regexFilter}", "", word)
+                if word == "":
+                    continue
+                else:
+                    outputWL += word
+            i += 1
             print(
                 f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
             )
