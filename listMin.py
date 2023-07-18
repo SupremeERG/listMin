@@ -31,6 +31,8 @@ def validateRegex(pattern):
             pattern = ""
             with open(args.patternfile, "r") as regexPatterns:
                 for regexPattern in regexPatterns:
+                    if regexPattern == "\n":
+                        continue
                     pattern += regexPattern.strip() + "|"
             pattern = pattern[:-1]
         re.compile(pattern)
