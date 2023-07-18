@@ -50,7 +50,7 @@ def cleanUp(wordlist: str):
     wordlist = wordlist.split("\n")
     wordlist = "\n".join(list(set(wordlist)))
 
-    return wordlist[1:] + "\n"
+    return wordlist + "\n"
 
 def getLineCount(file):
     return len(open(file, "rb").readlines())
