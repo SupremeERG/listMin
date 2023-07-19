@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-import re, argparse, collections
+import re, argparse
 from time import sleep, time
+from collections import OrderedDict
 
 # arguments
 parser = argparse.ArgumentParser()
