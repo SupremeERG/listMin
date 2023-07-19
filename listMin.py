@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-import re, argparse
+import re, argparse, collections
 from time import sleep, time
-from collections import OrderedDict
 
 # arguments
 parser = argparse.ArgumentParser()
@@ -28,6 +27,9 @@ def validateRegex(pattern):
     try:
         if pattern is None and args.patternfile is None:
             print("Please specify a regex using -r or read from a list using -p")
+            exit()
+        if pattern is not None and args.patternfile is not None:
+            print("Please only specify -r OR -p, dont use both")
             exit()
         elif args.patternfile is not None:
             pattern = ""
