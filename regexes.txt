@@ -1,3 +1,5 @@
 (.)\1{3,} // Matches any string with a character that repeats 4 times consecutively or more
 (.).*\1   // Matches any string that has the same character appear twice (anywhere, not consecutively)
 [!@#%^&*()_+\-=\[\]{}|;\':\",./<>?~\`] // Matches any string with a special character
+(\..*)$|/$ // Matches any string with extensions or / at the end
+\s+//.*     // Removes "  // < comment > " from a wordlist

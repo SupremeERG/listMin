@@ -49,7 +49,7 @@ def validateRegex(pattern):
         exit()
 
 def cleanUp(wordlist: str):    
-    wordlist = wordlist.strip()
+    wordlist = wordlist.strip() # first strip makes deduplication faster
 
     # remove duplicates
     wordlist = wordlist.split("\n")
@@ -59,7 +59,7 @@ def cleanUp(wordlist: str):
         wordlist = "\n".join(list(set(wordlist)))
 
 
-    return wordlist + "\n"
+    return wordlist.strip() + "\n"
 
 def getLineCount(file):
     return len(open(file, "rb").readlines())
@@ -90,10 +90,10 @@ try:
                     outputWL += word
             i += 1
             print(
-                f"{round(((i/fullLength) * 100), 2)}% Done", end="\r"
+                f"{round((i/fullLength) * 100, 2)}% Done", end="\r"
             )
 except KeyboardInterrupt:
-    print(f"\nStopping at the {i}th line")
+    print(f"\nStopping at {round((i/fullLength) * 100, 2)}%")
 finally:
     print("\n")
     endTime = time() - startTime
