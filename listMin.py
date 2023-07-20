@@ -83,11 +83,9 @@ try:
                 if re.search(rf"{regexFilter}", word) != None:
                     outputWL += word
             elif args.mode == "cut":
-                word = re.sub(rf"{regexFilter}", "", word)
-                if word == "":
+                if re.sub(rf"{regexFilter}", "", word) == "":
                     continue
-                else:
-                    outputWL += word
+                outputWL += re.sub(rf"{regexFilter}", "", word)
             i += 1
             print(
                 f"{round((i/fullLength) * 100, 2)}% Done", end="\r"
