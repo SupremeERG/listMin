@@ -46,10 +46,6 @@ def validateRegex(pattern):
 def cleanUp(wordlist: str):    
     wordlist = wordlist.strip() # first strip makes deduplication faster
 
-    # remove caps
-    if args.insensitive == True:
-        wordlist = wordlist.lower()
-
     # remove duplicates
     wordlist = wordlist.split("\n")
     if args.saveorder is True:
@@ -79,6 +75,8 @@ def main():
             fullLength = getLineCount(args.wordlist)
             for word in wordlist:
                 word = word.decode("latin-1")
+                if args.insensitive == True:
+                    word = word.lower()
                 # algorithm
                 if args.mode == "exclude":
                     if re.search(rf"{regexFilter}", word) == None:
