@@ -8,6 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude, cut\")\nDEFAULT: exclude", default="exclude", choices=["include","exclude", "cut"])
 parser.add_argument("-p", "--patternfile", help="Read list of regexes in a file seperated by new lines (u guessed it: a wordlist)")
 parser.add_argument("-s", "--saveorder", help="Save the order of the inputted wordlist (This will make the cleanup just a little longer)", action="store_true")
+parser.add_argument("-i", "--insensitive", help="Makes every entry of wordlist lowercase", action="store_true")
 parser.add_argument("-w", "--wordlist", help="Input wordlist", required=True)
 parser.add_argument(
     "-r", "--regex", help="Regex to filter through wordlist"
@@ -16,12 +17,6 @@ parser.add_argument(
     "-o", "--output", help="Output file for transformed wordlist", required=True
 )
 args = parser.parse_args()
-
-# variables
-outputWL = ""
-i = 0
-startTime = time()
-
 
 # functions
 def validateRegex(pattern):
@@ -51,6 +46,10 @@ def validateRegex(pattern):
 def cleanUp(wordlist: str):    
     wordlist = wordlist.strip() # first strip makes deduplication faster
 
+    # remove caps
+    if args.insensitive == True:
+        wordlist = wordlist.lower()
+
     # remove duplicates
     wordlist = wordlist.split("\n")
     if args.saveorder is True:
@@ -68,39 +67,46 @@ regexFilter = validateRegex(args.regex)
 
 
 # main script
-try:
-    print("\n\n")
-    with open(args.wordlist, "rb") as wordlist:
-        i = 0
-        fullLength = getLineCount(args.wordlist)
-        for word in wordlist:
-            word = word.decode("latin-1")
-            # algorithm
-            if args.mode == "exclude":
-                if re.search(rf"{regexFilter}", word) == None:
-                    outputWL += word
-            elif args.mode == "include":
-                if re.search(rf"{regexFilter}", word) != None:
-                    outputWL += word
-            elif args.mode == "cut":
-                if re.sub(rf"{regexFilter}", "", word) == "":
-                    continue
-                outputWL += re.sub(rf"{regexFilter}", "", word)
-            i += 1
-            print(
-                f"{round((i/fullLength) * 100, 2)}% Done", end="\r"
-            )
-except KeyboardInterrupt:
-    print(f"\nStopping at {round((i/fullLength) * 100, 2)}%")
-finally:
-    print("\n")
-    endTime = time() - startTime
+def main():
+    outputWL = ""
+    i = 0 # progression
+    startTime = time()
 
-    
-    [print(f"\rCleaning Up{'.' * x}", end="\r") or sleep(0.2) for x in range(4)]
-    
-    cleanedList = cleanUp(outputWL)    
-    with open(args.output, "w", encoding="latin-1") as outputFile:
-        outputFile.write(cleanedList)
-    print(f"\n{cleanedList.count(chr(10))} lines written to {args.output} in {round(endTime, 2)} seconds")
+    try:
+        print("\n\n")
+        with open(args.wordlist, "rb") as wordlist:
+            i = 0
+            fullLength = getLineCount(args.wordlist)
+            for word in wordlist:
+                word = word.decode("latin-1")
+                # algorithm
+                if args.mode == "exclude":
+                    if re.search(rf"{regexFilter}", word) == None:
+                        outputWL += word
+                elif args.mode == "include":
+                    if re.search(rf"{regexFilter}", word) != None:
+                        outputWL += word
+                elif args.mode == "cut":
+                    if re.sub(rf"{regexFilter}", "", word) == "":
+                        continue
+                    outputWL += re.sub(rf"{regexFilter}", "", word)
+                i += 1
+                print(
+                    f"{round((i/fullLength) * 100, 2)}% Done", end="\r"
+                )
+    except KeyboardInterrupt:
+        print(f"\nStopping at {round((i/fullLength) * 100, 2)}%")
+    finally:
+        print("\n")
+        endTime = time() - startTime
 
+        
+        [print(f"\rCleaning Up{'.' * x}", end="\r") or sleep(0.2) for x in range(4)]
+        
+        cleanedList = cleanUp(outputWL)    
+        with open(args.output, "w", encoding="latin-1") as outputFile:
+            outputFile.write(cleanedList)
+        print(f"\n{cleanedList.count(chr(10))} lines written to {args.output} in {round(endTime, 2)} seconds")
+
+if __name__ == "__main__":
+    main()
