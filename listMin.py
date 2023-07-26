@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude, cut\")\nDEFAULT: exclude", default="exclude", choices=["include","exclude", "cut"])
 parser.add_argument("-p", "--patternfile", help="Read list of regexes in a file seperated by new lines (u guessed it: a wordlist)")
 parser.add_argument("-s", "--saveorder", help="Save the order of the inputted wordlist (This will make the cleanup just a little longer)", action="store_true")
-parser.add_argument("-i", "--insensitive", help="Makes every entry of wordlist lowercase", action="store_true")
+parser.add_argument("-l", "--lowercase", help="Makes every entry of wordlist lowercase", action="store_true")
 parser.add_argument("-w", "--wordlist", help="Input wordlist", required=True)
 parser.add_argument(
     "-r", "--regex", help="Regex to filter through wordlist"
@@ -75,7 +75,7 @@ def main():
             fullLength = getLineCount(args.wordlist)
             for word in wordlist:
                 word = word.decode("latin-1")
-                if args.insensitive == True:
+                if args.lowercase == True:
                     word = word.lower()
                 # algorithm
                 if args.mode == "exclude":
