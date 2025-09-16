@@ -3,7 +3,7 @@ import re, argparse
 from time import sleep, time
 from collections import OrderedDict
 
-# arguments
+# user arguments and manual
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--mode", help="Filtering mode to use, (\"include, exclude, cut\")\nDEFAULT: exclude", default="exclude", choices=["include","exclude", "cut"])
 parser.add_argument("-p", "--patternfile", help="Read list of regexes in a file seperated by new lines (u guessed it: a wordlist)")
@@ -18,8 +18,12 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-# functions
+
 def validateRegex(pattern):
+    """
+    Validates and compiles the regex pattern provided by the user.
+    If no pattern is provided, or if the pattern is invalid, the function will print an error message and exit the program.
+    """
     try:
         if pattern is None and args.patternfile is None:
             print("Please specify a regex using -r or read from a list using -p")
@@ -44,6 +48,10 @@ def validateRegex(pattern):
         exit()
 
 def cleanUp(wordlist: str):    
+    """
+    Cleans up the wordlist by removing duplicates and stripping whitespace.
+    If the saveorder option is not used, the order of the wordlist will be scrambled due to the functionality of the set() function.
+    """
     wordlist = wordlist.strip() # first strip makes deduplication faster
 
     # remove duplicates
@@ -57,12 +65,14 @@ def cleanUp(wordlist: str):
     return wordlist.strip() + "\n"
 
 def getLineCount(file):
+    """
+    Returns the number of lines in a file.
+    """
     return len(open(file, "rb").readlines())
 
 regexFilter = validateRegex(args.regex)
 
 
-# main script
 def main():
     outputWL = ""
     i = 0 # progression
@@ -70,14 +80,15 @@ def main():
 
     try:
         print("\n\n")
+
+        # transformation algorithm
         with open(args.wordlist, "rb") as wordlist:
             i = 0
             fullLength = getLineCount(args.wordlist)
             for word in wordlist:
-                word = word.decode("latin-1")
+                word = word.decode("latin-1") # used to prevent regex searching error that seldomly occurs with utf-8
                 if args.lowercase == True:
                     word = word.lower()
-                # algorithm
                 if args.mode == "exclude":
                     if re.search(rf"{regexFilter}", word) == None:
                         outputWL += word
@@ -92,7 +103,7 @@ def main():
                 print(
                     f"{round((i/fullLength) * 100, 2)}% Done", end="\r"
                 )
-    except KeyboardInterrupt:
+    except KeyboardInterrupt: # catches ctrl+c
         print(f"\nStopping at {round((i/fullLength) * 100, 2)}%")
     finally:
         print("\n")
