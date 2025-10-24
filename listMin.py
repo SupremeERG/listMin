@@ -68,7 +68,8 @@ def getLineCount(file):
     """
     Returns the number of lines in a file.
     """
-    return len(open(file, "rb").readlines())
+    with open(file, "rb") as opened_file:
+        return len(opened_file.readlines())
 
 regexFilter = validateRegex(args.regex)
 
